@@ -4,6 +4,11 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      base_path:
+        description: Optional path override; leave empty to use Pages settings
+        type: string
+        required: false
 
 permissions:
   contents: read
@@ -39,7 +44,7 @@ jobs:
       - name: Prepare static site
         run: node scripts/package-pages.mjs
         env:
-          PAGES_BASE_PATH: ${{ steps.pages.outputs.base_path }}
+          PAGES_BASE_PATH: ${{ inputs.base_path || steps.pages.outputs.base_path }}
 
       - name: Upload static site
         uses: actions/upload-pages-artifact@v4
